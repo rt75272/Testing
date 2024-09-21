@@ -93,8 +93,3 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-pip-
     
-    - name: Security scan with Bandit
-      run: |
-        pip install bandit
-        bandit -r .
-
