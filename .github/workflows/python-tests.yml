@@ -1,11 +1,27 @@
 # Python and GitHub Actions CI/CD testing.
 name: Python Tests
+run-name: ${{github.actior}}
 
 # Runs this test file on git push or git pull_request.
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 # Specify job(s).
 jobs:
+  # Specify job called check-bats
+  check-bats-version:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
   # Specifiy job called tests.
   test:
     # OS version.
