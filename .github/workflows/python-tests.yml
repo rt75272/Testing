@@ -1,29 +1,38 @@
+# Python and GitHub Actions CI/CD testing.
 name: Python Tests
 
+# Runs this test file on git push or git pull_request.
 on: [push, pull_request]
 
+# Specify job(s).
 jobs:
+  # Specifiy job called tests.
   test:
+    # OS version.
     runs-on: ubuntu-latest
-    # Run with version.
     strategy:
+      # Array of python versions to test.
       matrix:
-        python-version: [3.11, 3.12]  # Test against multiple Python versions
+        python-version: [3.11, 3.12]
 
+    # Grab the code.
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - name: Set up Python ${{ matrix.python-version }}
+    # Setup different Python versions.
+    - name: Set up Python ${{matrix.python-version}}
       uses: actions/setup-python@v4
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: ${{matrix.python-version}}
 
+    # Install prereqs.
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
+    # Linter with Python's flake8.
     - name: Lint with flake8
       run: |
         pip install flake8
@@ -32,11 +41,13 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --output-file=linter_results.txt
 
+    # Unit testing with Python's pytest.
     - name: Run tests with pytest
       run: |
         pip install pytest
         pytest -v --junitxml=test_results.xml
 
+    # Code coverage using Python's coverage package.
     - name: Generate code coverage report
       run: |
         pip install coverage
@@ -44,32 +55,36 @@ jobs:
         coverage report -m
         coverage xml
 
+    # Upload pytest results to artifact.
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: pytest_results-${{matrix.python-version}}
+        name: pytest_results_python${{matrix.python-version}}
         path: test_results.xml
 
+    # Upload coverage results to artifact.
     - name: Upload coverage results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: coverage-${{matrix.python-version}}
+        name: coverage_python${{matrix.python-version}}
         path: coverage.xml
 
+     # Upload linter results to artifact.
     - name: Upload linter results
       if: always()
       uses: actions/upload-artifact@v4
       with:
-        name: linter-${{matrix.python-version}}
+        name: linter_python${{matrix.python-version}}
         path: linter_results.txt
 
-    - name: Cache dependencies
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
+    # # Cache setup.
+    # - name: Cache dependencies
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: ~/.cache/pip
+    #     key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-pip-
     
