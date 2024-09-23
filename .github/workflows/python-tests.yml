@@ -26,15 +26,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
-      with:
-        node-version: '20'
 
     # Setup different Python versions.
     - name: Set up Python ${{matrix.python-version}}
       uses: actions/setup-python@v4
       with:
         python-version: ${{matrix.python-version}}
-        node-version: '20'
 
     # Install prereqs.
     - name: Install dependencies
