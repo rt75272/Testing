@@ -8,7 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        python-version: [3.11]  # Test against multiple Python versions
+        python-version: [3.11, 3.12]  # Test against multiple Python versions
 
     steps:
     - name: Checkout code
