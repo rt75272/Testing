@@ -64,7 +64,7 @@ jobs:
     - name: Run tests with pytest
       run: |
         pip install pytest
-        pytest -v
+        pytest -v --junitxml=test-results.xml
 
     - name: Generate code coverage report
       run: |
