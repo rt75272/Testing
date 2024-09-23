@@ -5,7 +5,7 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    # Run with version.
     strategy:
       matrix:
         python-version: [3.11, 3.12]  # Test against multiple Python versions
