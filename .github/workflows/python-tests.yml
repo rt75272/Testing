@@ -13,15 +13,6 @@ on:
 
 # Specify job(s).
 jobs:
-  # Specify job called check-bats
-  check-bats-version:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-
   # Specifiy job called tests.
   test:
     # OS version.
@@ -35,12 +26,15 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
+      with:
+        node-version: '20'
 
     # Setup different Python versions.
     - name: Set up Python ${{matrix.python-version}}
       uses: actions/setup-python@v4
       with:
         python-version: ${{matrix.python-version}}
+        node-version: '20'
 
     # Install prereqs.
     - name: Install dependencies
